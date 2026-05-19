@@ -113,6 +113,8 @@ if (list) {
         (*list) = el;
       }
 
+el->prev = cur->prev;
+cur->prev = el;
 
     }
     else {
@@ -391,6 +393,76 @@ return;
 int main() {
 
         struct point* head = NULL;
+
+addToHead(&head,1000,10000);
+printList(head);
+
+for(int i =0; i< 10; i++){
+addToHead(&head,10-i,10-i);
+}
+
+
+printList(head);
+
+delHead(&head);
+
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+delElem(&head,2,2);
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+struct point *elem = find(head,5,5);
+if(elem){
+printf("element (%d,%d) found at %p",elem->x,elem->y,&elem);
+}else{
+printf("element not found");
+}
+
+clear(&head);
+
+
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+
+for(int i =0; i< 10; i++){
+addToHead(&head,10-i,10-i);
+}
+addBefore(&head,7,7,222,222);
+
+
+printf("\n\n------------next part-------------\n\n");
+printList(head);
+
+addAfter(head,7,7,333,333);
+
+
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+
+addAtPos(&head,999,876,3);
+
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+delAtPos(&head,3);
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+
+addToTail(&head,111,111);
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+delTail(&head);
+printf("\n\n-------------------------\n\n");
+printList(head);
+
+clear(&head);
+return 0;
         //struct point* head = (struct point*)calloc(sizeof(struct point), 1);
         //struct point* el1 = (struct point*)calloc(sizeof(struct point), 1);
         //struct point* el2 = (struct point*)calloc(sizeof(struct point), 1);
