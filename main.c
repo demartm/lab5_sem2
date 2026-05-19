@@ -21,7 +21,6 @@ struct point* addBefore(struct point **list,int x,int y,int x_add,int y_add) {
                                 el->x = x_add;
                                 el->y = y_add;
 
-                                //if (cur->prev) {
                                         el->prev = cur->prev;
                                         el->next = cur;
 
