@@ -11,7 +11,7 @@ struct point {
 };
 
 struct point* addBefore(struct point **list,int x,int y,int x_add,int y_add) {
-        if (list/* && *list*/) {
+        if (list) {
                 struct point* el = (struct point*)calloc(sizeof(struct point), 1);
                 if (el) {
                         struct point* cur = NULL;// (*list);
@@ -65,26 +65,12 @@ struct point *addAfter(struct point *list,int x,int y,int x_add,int y_add) {
                                 el->x = x_add;
                                 el->y = y_add;
 
-                                /*if (list->next == NULL) {
-                                        el->prev = list;
-                                        el->next = NULL;
-
-
-                                }*/
-
-                                //if (list->next == NULL) {
-                                //	//el->prev = list;
-                                //	el->next = NULL;
-                                //	//list->next = el;
-                                //}
-                                //else {
                                         el->prev = list;
                                         el->next = list->next;
                                         list->next = el;
                                         if (el->next) {
                                                 el->next->prev = el;
                                         }
-                                //}
 
                         }
                         else {
