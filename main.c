@@ -12,7 +12,7 @@ struct point {
 
 
 bool addToHead(struct point** head,int x, int y) {
-        if (head/* && *head*/) {
+        if (head) {
                 struct point* new_head = (struct point*)calloc(1, sizeof(struct point));
                 if (new_head) {
                         new_head->x = x;
@@ -65,10 +65,8 @@ bool delTail(struct point **list) {
         if (list && *list) {
                 struct point* cur = *list;
                 while (cur->next) {
-                        //printf("%d %d\n", list->x, list->y);
                         cur = cur->next;
                 }
-                //list->prev->next = NULL;
                 if (!(cur->prev)) {
 
                         free(*list);
