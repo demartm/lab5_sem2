@@ -10,7 +10,7 @@ struct point {
         struct point* next;
 };
 
-bool delElem(struct point **list,int x, int y) {
+void delElem(struct point **list,int x, int y) {
         if (list && *list) {
 
                 struct point* cur = NULL;
@@ -42,13 +42,13 @@ bool delElem(struct point **list,int x, int y) {
                                 }
                         }
 
-                        return true;
+
                 }
 
         }
 
 
-        return false;
+        return;
 }
 
 void clear(struct point **list) {
