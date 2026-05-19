@@ -11,80 +11,82 @@ struct point {
 };
 
 
-bool addToHead(struct point** head,int x, int y) {
-        if (head) {
-                struct point* new_head = (struct point*)calloc(1, sizeof(struct point));
-                if (new_head) {
-                        new_head->x = x;
-                        new_head->y = y;
-                        new_head->next = (*head);
-                        new_head->prev = NULL;
-                        if (*head) {
-                                (*head)->prev = new_head;
-                        }
-                        (*head) = new_head;
-                        return true;
-                }
-        }
+void addToHead(struct point** head,int x, int y) {
+if (head) {
+  struct point* new_head = (struct point*)calloc(1, sizeof(struct point));
+  if (new_head) {
 
-        return false;
+    new_head->x = x;
+    new_head->y = y;
+    new_head->next = (*head);
+    new_head->prev = NULL;
+
+    if (*head) {
+
+      (*head)->prev = new_head;
+    }
+    (*head) = new_head;
+  }
+}
+
+return;
 }
 
 struct point* addToTail(struct point **head,int x,int y) {
-        if (head) {
-                struct point* list = *head;
-                struct point* new_tail = (struct point*)calloc(sizeof(struct point), 1);
-                if (new_tail) {
-                        if (list) {
-                                while (list->next) {
-                                        list = list->next;
-                                }
+if (head) {
+  struct point* list = *head;
+  struct point* new_tail = (struct point*)calloc(sizeof(struct point), 1);
+  if (new_tail) {
 
-                                list->next = new_tail;
-                        }
-                        else {
-                                (*head) = new_tail;
-                        }
-                        new_tail->x = x;
-                        new_tail->y = y;
-                        new_tail->prev = list;
-                        new_tail->next = NULL;
+    if (list) {
 
+      while (list->next) {
 
+        list = list->next;
+      }
 
-                        return new_tail;
+      list->next = new_tail;
+    }
+    else {
 
-                }
-        }
+      (*head) = new_tail;
+    }
+    new_tail->x = x;
+    new_tail->y = y;
+    new_tail->prev = list;
+    new_tail->next = NULL;
 
+    return new_tail;
 
-        return NULL;
+  }
+}
+return NULL;
 }
 
-bool delTail(struct point **list) {
-        if (list && *list) {
-                struct point* cur = *list;
-                while (cur->next) {
-                        cur = cur->next;
-                }
-                if (!(cur->prev)) {
+void delTail(struct point **list) {
+if (list && *list) {
 
-                        free(*list);
-                        *list = NULL;
-                }
-                else {
-                        cur->prev->next = NULL;
-                        free(cur);
+  struct point* cur = *list;
 
-                }
+  while (cur->next) {
+    cur = cur->next;
+  }
 
-                return true;
+  if (!(cur->prev)) {
+
+    free(*list);
+    *list = NULL;
+  }
+  else {
+    cur->prev->next = NULL;
+    free(cur);
+  }
 
 
 
-        }
 
-        return false;
+}
+return;
 }
 
 int main() {
