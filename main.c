@@ -27,6 +27,9 @@ if (head) {
     }
     (*head) = new_head;
   }
+}
+return;
+}
 
 struct point* addBefore(struct point **list,int x,int y,int x_add,int y_add) {
 if (list) {
@@ -58,13 +61,16 @@ if (list) {
       }
 
 
-
+return el;
     }
     else {
     free(el);
     }
 
   }
+}
+return NULL;
+}
 
 
 struct point* addAtPos(struct point** list, int x, int y, size_t pos) {
@@ -127,6 +133,9 @@ if (list) {
     }
 
   }
+}
+return NULL;
+}
 
 
 void delElem(struct point **list,int x, int y) {
@@ -175,8 +184,6 @@ if (list && *list) {
 return;
 }
 
-return;
-}
 
 struct point* addToTail(struct point **head,int x,int y) {
 if (head) {
@@ -235,12 +242,7 @@ if (list && *list) {
 return;
 }
 
-int main() {
-return 0;
-}
 
-return NULL;
-}
 
 struct point *addAfter(struct point *list,int x,int y,int x_add,int y_add) {
 if (list) {
@@ -264,7 +266,7 @@ if (el) {
 
       el->next->prev = el;
     }
-
+return el;
   }
   else {
     free(el);
@@ -357,7 +359,6 @@ if (cur && i == pos) {
 return;
 }
 
-return NULL;
 void clear(struct point **list) {
 
 if (list && *list) {
@@ -386,4 +387,68 @@ if (list) {
   }
 }
 return;
+}
+int main() {
+
+        struct point* head = NULL;
+        //struct point* head = (struct point*)calloc(sizeof(struct point), 1);
+        //struct point* el1 = (struct point*)calloc(sizeof(struct point), 1);
+        //struct point* el2 = (struct point*)calloc(sizeof(struct point), 1);
+        //struct point* el3 = (struct point*)calloc(sizeof(struct point), 1);
+        //struct point* el4 = (struct point*)calloc(sizeof(struct point), 1);
+
+        //head->prev = NULL;
+        //head->next = el1;
+        //el1->prev = head;
+        //el1->next = el2;
+        //el2->prev = el1;
+        //el2->next = el3;
+
+        //el3->prev = el2;
+        //el3->next = el4;
+        //
+        //el4->prev = el3;
+        //el4->next = NULL;
+
+        //el1->x = 1;
+        //addToHead(&head, 1, 3);
+        //addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 2);
+        addToHead(&head, 1, 3);
+        ////clear(&head);
+        ////delHead(&head);
+        //addToTail(&head, 5, 9909);
+        //addToTail(&head, 5, 5);
+        //addToHead(&head, 9999, 9999);
+        //addToTail(&head, 5, 5);
+        //delTail(&head);
+        //delTail(&head);
+        //delTail(&head);
+        //delTail(&head);
+        //delTail(&head);
+        //delTail(&head);
+        //delTail(&head);
+        //delTail(&head);
+        //delTail(&head);
+        //delElem(&head, 9999, 9999);
+        //struct point *elem = find(head, 9999, 9999);
+        addAtPos(&head, 13, 37, 0);
+        //addAfter(head, 9999, 9999,100,100);
+        addAtPos(&head, 99, 10, 21);
+        //delAtPos(&head, 21);
+        addBefore(&head, 13, 37, 188998, 9289289);
+        //if(elem) { printf("\nfound %d %d \n\n", elem->x, elem->y); }
+        printList(head);
+
+
+
+
+return 0;
 }
