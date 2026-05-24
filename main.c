@@ -390,9 +390,21 @@ if (list) {
 }
 return;
 }
+
+void printBackwards(struct point *list){
+if (list) {
+  while (list) {
+
+    printf("%d %d\n", list->x, list->y);
+    list = list->prev;
+  }
+}
+return;
+
+}
 int main() {
 
-        struct point* head = NULL;
+struct point* head = NULL;
 
 addToHead(&head,1000,10000);
 printList(head);
@@ -460,6 +472,14 @@ printList(head);
 delTail(&head);
 printf("\n\n-------------------------\n\n");
 printList(head);
+
+
+printf("\n\n------------next part-------------\n\n");
+struct point *tail = addToTail(&head,0,0);
+if(tail){
+printBackwards(tail);
+}
+
 
 clear(&head);
 return 0;
