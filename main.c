@@ -2,18 +2,18 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-struct point {
+/*typedef */struct point {
 
         int x;
         int y;
         struct point* prev;
         struct point* next;
-};
+};/* point_t;*/
 
 
 void addToHead(struct point** head,int x, int y) {
 if (head) {
-  struct point* new_head = (struct point*)calloc(1, sizeof(struct point));
+  struct point* new_head = (struct point*)calloc(sizeof(struct point),1);
   if (new_head) {
 
     new_head->x = x;
@@ -37,7 +37,7 @@ if (list) {
   struct point* el = (struct point*)calloc(sizeof(struct point), 1);
   if (el) {
 
-    struct point* cur = NULL;// (*list);
+    struct point* cur = NULL;
     for (cur = (*list); cur && !(cur->x == x && cur->y == y); cur = cur->next);
 
     if (cur) {
@@ -49,17 +49,13 @@ if (list) {
 
       if (cur->prev == NULL) {
 
-        el->prev = NULL;
-        cur->prev = el;
         (*list) = el;
       }
       else {
 
-        el->prev = cur->prev;
         cur->prev->next = el;
-        cur->prev = el;
       }
-
+        cur->prev = el;
 
 return el;
     }
@@ -73,68 +69,58 @@ return NULL;
 }
 
 
-struct point* addAtPos(struct point** list, int x, int y, size_t pos) {
+struct point *addAtPos(struct point **list, int x, int y, size_t pos){
 
-if (list) {
+if(list){
+  struct point* el = (struct point*)calloc(sizeof(struct point),1);
 
-  struct point* el = (struct point*)calloc(sizeof(struct point), 1);
+  if(el){
+    struct point *cur = NULL;
+    struct point *previous = NULL;
+    size_t ix = 0;
 
-  if (el) {
+    for(cur = *list; cur && ix < pos;cur = cur->next,ix++){
+      previous = cur;
+    }
     el->x = x;
     el->y = y;
-    if (!(*list) && pos == 0) {
-      (*list) = el;
-      return el;
-    }
 
-    size_t i = 0;
+    if(cur){
 
-    struct point *cur = NULL;
-    struct point* previous = NULL;
+    if(cur->prev){
 
-    for (cur = *list; cur && i < pos; cur = cur->next, i++) {
-
-      if (cur->prev) {
-
-        previous = cur;// ->prev;
-      }
-    }
-    if (i == pos) {
-
-    if (cur) {
       el->next = cur;
+      el->prev = cur->prev;
+      cur->prev->next = el;
+      cur->prev = el;
 
-      if (cur->prev) {
+    }else{
 
-        cur->prev->next = el;
-      }
-      else {
-
-        (*list) = el;
-      }
-
-el->prev = cur->prev;
-cur->prev = el;
-
+      el->next = cur;
+      el->prev = NULL;
+      cur->prev = el;
+      (*list) = el;
     }
-    else {
+      return el;
+    }else{
+    if(ix == pos){
+      el->prev = previous;
+      el->next = NULL;
 
-      if (previous) {
-
+      if(previous){
         previous->next = el;
-        el->prev = previous;
-        el->next = NULL;
+
+      }else{
+        *list = el;
       }
-
-    }
-
-    return el;
-    }
-    else {
+      return el;
+    }else{
       free(el);
     }
 
-  }
+    }
+
+}
 }
 return NULL;
 }
@@ -150,34 +136,17 @@ if (list && *list) {
 
   if (cur) {
 
-    if (cur->prev) {
+  if(cur->prev){
+    cur->prev->next = cur->next;
+  }else{
+    (*list) = cur->next;
+  }
 
-      if (cur->next) {
+  if(cur->next){
+    cur->next->prev = cur->prev;
+  }
 
-        cur->prev->next = cur->next;
-        cur->next->prev = cur->prev;
-        free(cur);
-      }
-      else {
-
-        cur->prev->next = NULL;
-        free(cur);
-      }
-    }
-    else {
-      if (cur->next) {
-
-        cur->next->prev = NULL;
-        (*list) = cur->next;
-        free(cur);
-      }
-      else {
-        free(cur);
-        (*list) = NULL;
-      }
-    }
-
-
+  free(cur);
   }
 
   }
@@ -189,27 +158,24 @@ return;
 
 struct point* addToTail(struct point **head,int x,int y) {
 if (head) {
-  struct point* list = *head;
   struct point* new_tail = (struct point*)calloc(sizeof(struct point), 1);
   if (new_tail) {
+    new_tail->x = x;
+    new_tail->y = y;
+    new_tail->next = NULL;
 
-    if (list) {
+    if (*head) {
+  struct point* list = NULL;
 
-      while (list->next) {
+  for(list = *head; list->next;list = list->next);
 
-        list = list->next;
-      }
-
+    new_tail->prev = list;
       list->next = new_tail;
     }
     else {
 
       (*head) = new_tail;
     }
-    new_tail->x = x;
-    new_tail->y = y;
-    new_tail->prev = list;
-    new_tail->next = NULL;
 
     return new_tail;
 
@@ -262,26 +228,23 @@ if (el) {
 
     el->prev = list;
     el->next = list->next;
+    if (list->next) {
+
+      list->next->prev = el;
+    }
     list->next = el;
 
-    if (el->next) {
-
-      el->next->prev = el;
-    }
-return el;
+    return el;
   }
   else {
     free(el);
   }
 
   }
-
-
 }
-
-
 return NULL;
 }
+
 struct point* find(struct point *head,int x,int y) {
 if (head) {
   while (head && !(head->x == x && head->y == y)) {
@@ -303,7 +266,7 @@ if (head && *head) {
 
   if (ptr) {
 
-    (*head)->next->prev = NULL;
+    ptr->prev = NULL;
   }
   free(*head);
   (*head) = ptr;
@@ -312,54 +275,32 @@ if (head && *head) {
 
 return;
 }
-void delAtPos(struct point **list,size_t pos) {
-if (list && *list) {
 
-struct point* cur = NULL;// *list;
+void delAtPos(struct point **list, size_t pos){
+if(list && *list){
+  struct point* cur = NULL;
+  size_t i = 0;
 
-size_t i = 0;
+  for(cur = *list; cur && i < pos; cur = cur->next, i++);
 
-for (cur = *list; i < pos && cur; cur = cur->next, i++);
-
-if (cur && i == pos) {
-
-  if (cur->prev) {
-
-    if (cur->next) {
-
+  if(cur && i == pos){
+    if(cur->prev){
       cur->prev->next = cur->next;
+    }
+
+    if(cur->next){
       cur->next->prev = cur->prev;
-      free(cur);
-    }
-    else {
 
-      cur->prev->next = NULL;
-      free(cur);
-    }
   }
-  else {
-
-    if (cur->next) {
-
-      cur->next->prev = NULL;
+    if(i == 0){
       (*list) = cur->next;
-      free(cur);
     }
-    else {
-
-      free(cur);
-      (*list) = NULL;
-    }
-  }
-
+free(cur);
 }
-
-
-}
-
-
 return;
 }
+}
+
 
 void clear(struct point **list) {
 
@@ -374,8 +315,6 @@ if (list && *list) {
   }
   (*list) = NULL;
 }
-
-
 
 return;
 }
@@ -405,142 +344,196 @@ return;
 int main() {
 
 struct point* head = NULL;
-
+printf("\n\nhead--------------------\n\n");
 addToHead(&head,1000,10000);
 printList(head);
 
-for(int i =0; i< 10; i++){
-addToHead(&head,10-i,10-i);
-}
 
-
-printList(head);
-
-delHead(&head);
-
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-delElem(&head,2,2);
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-struct point *elem = find(head,5,5);
-if(elem){
-printf("element (%d,%d) found at %p",elem->x,elem->y,&elem);
-}else{
-printf("element not found");
-}
-
-clear(&head);
-
-
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-
-for(int i =0; i< 10; i++){
-addToHead(&head,10-i,10-i);
-}
-addBefore(&head,7,7,222,222);
-
-
-printf("\n\n------------next part-------------\n\n");
-printList(head);
-
-addAfter(head,7,7,333,333);
-
-
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-
-addAtPos(&head,999,876,3);
-
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-delAtPos(&head,3);
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-
-addToTail(&head,111,111);
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-delTail(&head);
-printf("\n\n-------------------------\n\n");
-printList(head);
-
-
-printf("\n\n------------next part-------------\n\n");
+printf("\n\nprintBack-------------------------\n\n");
 struct point *tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
 if(tail){
-printBackwards(tail);
+  printBackwards(tail);
+}
+
+printf("\n\nelem--------------------\n\n");
+for(int i = 0; i < 4; i++){
+  addToHead(&head,4-i,4-i);
+}
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+printf("\n\ndelHead-------------------\n\n");
+delHead(&head);
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+printf("\n\ndelElem--------------------\n\n");
+delElem(&head,3,3);
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+printf("\n\nfindElem--------------------\n\n");
+struct point *elem = find(head,4,4);
+if(elem){
+  printf("element (%d,%d) found at %p\n",elem->x,elem->y,(void*)elem);
+}else{
+  printf("element not found\n");
+}
+
+elem = find(head,100000,5000000);
+if(elem){
+  printf("element (%d,%d) found at %p\n",elem->x,elem->y,(void*)elem);
+}else{
+  printf("element not found\n");
+}
+
+printf("\n\nclear------------------------\n\n");
+clear(&head);
+printList(head);
+
+printf("\n\n------------next part-------------\n\n");
+for(int i =0; i < 4; i++){
+  addToHead(&head,4-i,4-i);
+}
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+printf("\n\naddBefore/After------------------------\n\n");
+
+elem = addBefore(&head,3,3,222,222);
+//elem = addBefore(&head,1,1,222,222);
+//elem = addBefore(&head,4,4,222,222);
+if(elem){
+  printf("elem added at %p\n",(void*)elem);
+}else{
+  printf("failed adding elem\n");
+}
+
+
+elem = addAfter(head,2,2,333,333);
+//elem = addAfter(head,1,1,333,333);
+//elem = addAfter(head,4,4,333,333);
+if(elem){
+  printf("elem added at %p\n",(void*)elem);
+}else{
+  printf("failed adding elem\n");
+}
+
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+delElem(&head,222,222);
+delElem(&head,333,333);
+
+printf("\n\naddAtPos--------------------------\n\n");
+//elem = addAtPos(&head,999,999,0);
+// elem = addAtPos(&head,999,999,1);
+ elem = addAtPos(&head,999,999,2);
+// elem = addAtPos(&head,999,999,3);
+// elem = addAtPos(&head,999,999,4);
+if(elem){
+  printf("elem added at %p\n",(void*)elem);
+}else{
+  printf("failed adding elem");
+}
+
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+printf("\n\ndelete---------------------\n\n");
+//delAtPos(&head,0);
+//delAtPos(&head,1);
+delAtPos(&head,2);
+//delAtPos(&head,3);
+//delAtPos(&head,4);
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+printf("\n\naddToTail-------------------------\n\n");
+elem = addToTail(&head,111,111);
+if(elem){
+  printf("elem added at %p\n",(void*)elem);
+}else{
+  printf("failed adding elem");
+}
+
+printList(head);
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
+}
+
+printf("\n\ndelTail-----------------------\n\n");
+delTail(&head);
+printList(head);
+
+//delAtPos(&head,12);
+
+
+printf("\nprintBack-------------------------\n\n");
+tail = addToTail(&head,0,0);
+tail = tail->prev;
+delTail(&(tail->next));
+if(tail){
+  printBackwards(tail);
 }
 
 
 clear(&head);
-return 0;
-        //struct point* head = (struct point*)calloc(sizeof(struct point), 1);
-        //struct point* el1 = (struct point*)calloc(sizeof(struct point), 1);
-        //struct point* el2 = (struct point*)calloc(sizeof(struct point), 1);
-        //struct point* el3 = (struct point*)calloc(sizeof(struct point), 1);
-        //struct point* el4 = (struct point*)calloc(sizeof(struct point), 1);
-
-        //head->prev = NULL;
-        //head->next = el1;
-        //el1->prev = head;
-        //el1->next = el2;
-        //el2->prev = el1;
-        //el2->next = el3;
-
-        //el3->prev = el2;
-        //el3->next = el4;
-        //
-        //el4->prev = el3;
-        //el4->next = NULL;
-
-        //el1->x = 1;
-        //addToHead(&head, 1, 3);
-        //addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 2);
-        addToHead(&head, 1, 3);
-        ////clear(&head);
-        ////delHead(&head);
-        //addToTail(&head, 5, 9909);
-        //addToTail(&head, 5, 5);
-        //addToHead(&head, 9999, 9999);
-        //addToTail(&head, 5, 5);
-        //delTail(&head);
-        //delTail(&head);
-        //delTail(&head);
-        //delTail(&head);
-        //delTail(&head);
-        //delTail(&head);
-        //delTail(&head);
-        //delTail(&head);
-        //delTail(&head);
-        //delElem(&head, 9999, 9999);
-        //struct point *elem = find(head, 9999, 9999);
-        addAtPos(&head, 13, 37, 0);
-        //addAfter(head, 9999, 9999,100,100);
-        addAtPos(&head, 99, 10, 21);
-        //delAtPos(&head, 21);
-        addBefore(&head, 13, 37, 188998, 9289289);
-        //if(elem) { printf("\nfound %d %d \n\n", elem->x, elem->y); }
-        printList(head);
-
-
-
-
 return 0;
 }
