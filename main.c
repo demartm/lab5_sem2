@@ -41,13 +41,14 @@ return;
 struct point* addBefore(struct point **list,int x,int y,int x_add,int y_add) {
 if (list) {
 
-  struct point* el = (struct point*)calloc(sizeof(struct point), 1);
-  if (el) {
+  //if (el) {
 
     struct point* cur = NULL;
     for (cur = (*list); cur && !(cur->x == x && cur->y == y); cur = cur->next);
 
     if (cur) {
+  struct point* el = (struct point*)calloc(sizeof(struct point), 1);
+    if(el){
       el->x = x_add;
       el->y = y_add;
 
@@ -65,12 +66,13 @@ if (list) {
         cur->prev = el;
 
 return el;
+}
     }
-    else {
-    free(el);
-    }
+    // else {
+    // free(el);
+    // }
 
-  }
+  //}
 }
 return NULL;
 }
@@ -79,9 +81,8 @@ return NULL;
 struct point *addAtPos(struct point **list, int x, int y, size_t pos){
 
 if(list){
-  struct point* el = (struct point*)calloc(sizeof(struct point),1);
 
-  if(el){
+  //if(el){
     struct point *cur = NULL;
     struct point *previous = NULL;
     size_t ix = 0;
@@ -89,9 +90,11 @@ if(list){
     for(cur = *list; cur && ix < pos;cur = cur->next,ix++){
       previous = cur;
     }
+if(ix == pos){
+  struct point* el = (struct point*)calloc(sizeof(struct point),1);
+if(el){
     el->x = x;
     el->y = y;
-
     if(cur){
 
     if(cur->prev){
@@ -108,9 +111,9 @@ if(list){
       cur->prev = el;
       (*list) = el;
     }
-      return el;
+      //return el;
     }else{
-    if(ix == pos){
+    //if(ix == pos){
       el->prev = previous;
       el->next = NULL;
 
@@ -120,14 +123,18 @@ if(list){
       }else{
         *list = el;
       }
+      //return el;
+    // }else{
+    //   free(el);
+    // }
+
+    }
+
       return el;
-    }else{
-      free(el);
-    }
-
-    }
-
 }
+}
+
+//}
 }
 return NULL;
 }
@@ -221,15 +228,17 @@ return;
 
 struct point *addAfter(struct point *list,int x,int y,int x_add,int y_add) {
 if (list) {
-struct point *el = (struct point*)calloc(sizeof(struct point), 1);
 
-if (el) {
+//if (el) {
 
   while (list && !(list->x == x && list->y == y)) {
     list = list->next;
   }
 
   if (list) {
+  struct point *el = (struct point*)calloc(sizeof(struct point), 1);
+
+  if(el){
     el->x = x_add;
     el->y = y_add;
 
@@ -243,11 +252,12 @@ if (el) {
 
     return el;
   }
-  else {
-    free(el);
   }
+  // else {
+  //   free(el);
+  // }
 
-  }
+ // }
 }
 return NULL;
 }
