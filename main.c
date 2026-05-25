@@ -2,13 +2,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-/*typedef */struct point {
+struct point {
 
         int x;
         int y;
         struct point* prev;
         struct point* next;
-};/* point_t;*/
+};
 
 
 void addToHead(struct point** head,int x, int y) {
