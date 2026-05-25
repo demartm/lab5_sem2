@@ -363,6 +363,7 @@ int main() {
 struct point* head = NULL;
 printf("\n\nhead--------------------\n\n");
 addToHead(&head,1000,10000);
+//addAtPos(&head,1000,1010,0);
 printList(head);
 
 
